@@ -1,0 +1,28 @@
+Software\Symantec\Backup Exec For Windows\Backup Exec\Agent Browser\TcpIp\AdvertisementPort=6101
+Software\Symantec\Backup Exec For Windows\Backup Exec\Debug\AgentConfig=0
+Software\Symantec\Backup Exec For Windows\Backup Exec\Debug\VXBSAlevel=
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\Agents\Advertise All=1
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\Agents\Advertise Now=0
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\Agents\Advertisement Purge=0
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\Agents\Advertising Disabled=0
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\Agents\Advertising Interval Minutes=240
+<% counter = 1
+  @media_servers.each do |server| -%>
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\Agents\Agent Directory List_<%= counter %>=<%= server %>
+<% counter += 1
+	end -%>
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\Agents\Auto Discovery Enabled=1
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\Logging\RANT NDMP Debug Level=0
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\Encoder=
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\ShowTSAFS=
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemExclude1=/mnt/nss/pools/
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemExclude2=/mnt/nss/.pools/
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemExclude3=/_admin/*.*
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemFSTypeExclude1=devpts
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemFSTypeExclude2=proc
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemFSTypeExclude3=sysfs
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemFSTypeExclude4=rpc_pipefs
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemFSTypeExclude5=tmpfs
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemFSTypeExclude6=ftp
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\SystemFSTypeExclude7=ntfs
+Software\Symantec\Backup Exec For Windows\Backup Exec\Engine\RALUS\VfmPath=/opt/VRTSralus/VRTSvxms

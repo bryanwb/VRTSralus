@@ -1,0 +1,171 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides: 		RALUS
+# Required-Start:	$ALL
+# Required-Stop:
+# Default-Start:	2 3 5
+# Default-Stop:		0 1 4 6
+# Description:		Symantec Backup Exec Remote Agent
+### END INIT INFO
+
+#
+# chkconfig: 235 95 35
+#
+# description: Symantec Backup Exec Remote Agent 
+#
+
+
+if [ ! -d /opt/VRTSralus ]
+then
+	echo "Symantec Backup Exec Remote Agent missing /opt/VRTSralus             [FAILED]"
+	exit 1
+fi
+
+if [ ! -d /etc/VRTSralus ]
+then
+	echo "Symantec Backup Exec Remote Agent missing /etc/VRTSralus             [FAILED]"
+	exit 1
+fi
+
+if [ ! -d /var/VRTSralus ]
+then
+	echo "Symantec Backup Exec Remote Agent missing /var/VRTSralus             [FAILED]"
+	exit 1
+fi
+
+CMD="$1"
+
+case "$CMD" in
+'start')
+	if [ -x /opt/VRTSralus/bin/beremote ]
+	then
+
+                if [ -f /bin/grep ]
+                then
+                        PID=`/bin/ps -e | /bin/grep beremote | /bin/sed -e 's/^  *//' -e 's/ .*//'`
+                else
+                        PID=`/usr/bin/ps -e | /usr/bin/grep beremote | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+                fi
+ 
+                if [ "${PID}" != "" ]
+                then
+                        echo "Symantec Backup Exec Remote Agent currently running."
+                        exit 2
+                fi
+        
+                if [ -f /dev/st0 -a ! -f /dev/sg0 ]
+                then
+                        modprobe sg
+                fi
+
+		echo -n "Starting Symantec Backup Exec Remote Agent "
+		rm -f /var/VRTSralus/ralus.pid
+		rm -f /var/VRTSralus/ralus.errpid
+		/opt/VRTSralus/bin/beremote >/var/VRTSralus/beremote.service.log 2>/var/VRTSralus/beremote.service.log &
+		PIDWAIT=30
+		while [ "$PIDWAIT" != "0" ] 
+		do
+			if [ -f /var/VRTSralus/ralus.pid ]
+			then
+				PIDWAIT=0
+			else
+				PIDWAIT=$(($PIDWAIT-1))
+				echo -n "."
+				sleep 1;
+			fi
+			if [ -f /var/VRTSralus/ralus.errpid ]
+			then
+				PIDWAIT=0
+			fi
+		done
+		if [ -f /var/VRTSralus/ralus.pid ]
+		then
+			RETVAL=0
+		else
+			RETVAL=1
+		fi
+		echo
+	else
+		RETVAL=1
+	fi
+	if [ "$RETVAL" = "0" ]
+	then
+		echo "Starting Symantec Backup Exec Remote Agent:                              [  OK  ]"
+	else
+		echo "Starting Symantec Backup Exec Remote Agent:                              [FAILED]"
+	fi
+	;;
+'status')
+	PID=$(ps -e | grep 'beremote' | grep -v 'grep' | \
+		sed -e 's/^  *//' -e 's/ .*//')
+	
+	if [ "${PID}" != "" ]
+	then
+		echo "Backup Exec Agent running"
+		RETVAL=0
+	else		
+		echo "Backup Exec Agent not running"	
+		RETVAL=1
+	fi
+	;;
+'stop')
+	if [ -f /bin/grep ]
+	then
+		PID=`/bin/ps -e | /bin/grep beremote | /bin/sed -e 's/^  *//' -e 's/ .*//'`
+	else
+		PID=`/usr/bin/ps -e | /usr/bin/grep beremote | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	fi
+
+	if [ "${PID}" != "" ]
+	then
+		echo -n "Stopping Symantec Backup Exec Remote Agent "
+		if [ -f /bin/pkill ]
+		then
+			/bin/pkill -15 beremote
+		else 
+			/usr/bin/pkill -15 beremote
+		fi
+		RETVAL=$?
+
+		PIDWAIT=30
+		while [ "$PIDWAIT" != "0" ]
+		do
+                        RESULT=`ps -p ${PID} | grep ${PID} | awk '{print $1}'`
+			if [ -f /var/VRTSralus/ralus.pid -a "$RESULT" = "" ]
+			then
+				PIDWAIT=0
+                                RETVAL=0
+			else
+				PIDWAIT=$(($PIDWAIT-1))
+				echo -n "."
+				sleep 1;
+			fi
+		done
+                echo  
+		rm -f /var/VRTSralus/ralus.pid
+		rm -f /var/VRTSralus/ralus.errpid
+	else
+		RETVAL=1
+	fi
+
+	if [ "$RETVAL" = "0" ]
+	then
+		echo "Stopping Symantec Backup Exec Remote Agent:                              [  OK  ]"
+	else
+		echo "Stopping Symantec Backup Exec Remote Agent:                              [FAILED]"
+	fi
+	;;
+'restart')
+	$0 stop
+	$0 start
+	RETVAL=$?	
+	;;
+*)
+	echo "Symantec Backup Exec Remote Agent for Linux/Unix Servers"
+	echo "Usage: VRTSralus.init { start | stop | restart }"
+	RETVAL=1
+	;;
+esac
+
+exit $RETVAL

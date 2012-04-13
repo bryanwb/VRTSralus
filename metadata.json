@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+  },
+  "name": "VRTSralus",
+  "maintainer_email": "YOUR_EMAIL",
+  "attributes": {
+  },
+  "license": "All rights reserved",
+  "suggestions": {
+  },
+  "platforms": {
+  },
+  "maintainer": "YOUR_COMPANY_NAME",
+  "long_description": "= DESCRIPTION:\nVRTSralus is better known as Symantec Backup Exec for linux.\n\nIt is a crappy tool and you should seriously consider not using it.\n\n= REQUIREMENTS:\n\nCentos/RHEL 5, 6\n\n= ATTRIBUTES:\n\n= USAGE:\n\n",
+  "version": "0.0.2",
+  "recommendations": {
+  },
+  "recipes": {
+  },
+  "groupings": {
+  },
+  "conflicting": {
+  },
+  "replacing": {
+  },
+  "description": "Installs/Configures VRTSralus",
+  "providing": {
+  }
+}
